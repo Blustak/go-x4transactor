@@ -1,15 +1,19 @@
 package config
 
 import (
-	"io"
-	"log/slog"
-
-	"github.com/Blustak/go-transActor/internal/database"
+	"bufio"
+	"strings"
 )
 
-type Config struct {
-	Log    *slog.Logger
-	DB     *database.Queries
-	Reader io.Reader
-	Writer io.Writer
+type Config struct{
+    bufio.Writer
+    bufio.Scanner
+}
+
+func (c *Config) GetArgs() []string {
+    if c.Scan() {
+        return strings.Fields(c.Text())
+    } else {
+        return nil
+    }
 }
