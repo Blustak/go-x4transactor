@@ -6,11 +6,18 @@ GOBUILDFLAGS=-ldflags=''
 BUILD_DIR=out
 EXE_NAME=transActor
 
-.PHONY: all build run test clean dbclean tidy fmt vet up down reset
+.PHONY: all build server client run test clean dbclean tidy fmt vet up down reset
 all: generate up tidy test build
 
-build: $(BUILD_DIR)
-	@$(GOCMD) build -o $(BUILD_DIR)/$(EXE_NAME)
+build: $(BUILD_DIR) server client
+
+server:
+	@echo "building server..."
+	@$(GOCMD) -C ./server build -o ../$(BUILD_DIR)/$(EXE_NAME)_server
+
+client:
+	@echo "building client..."
+	@$(GOCMD) -C ./client build -o ../$(BUILD_DIR)/$(EXE_NAME)_client
 
 $(BUILD_DIR):
 	@echo "Creating out directory..."
@@ -22,7 +29,8 @@ run: build
 
 tidy: fmt vet
 	@echo "Tidying go modules..."
-	@$(GOCMD) mod tidy
+	@cd ./server && $(GOCMD) mod tidy
+	@cd ./client && $(GOCMD) mod tidy
 
 fmt:
 	@echo "Formatting files..."

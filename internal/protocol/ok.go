@@ -1,5 +1,7 @@
 package protocol
 
-type OkRequest struct{}
+type OKMessage struct{}
 
-type OkResponse struct{}
+func (m *OKMessage) GetProtoType() ProtoType {
+	return ProtocolOK
+}
